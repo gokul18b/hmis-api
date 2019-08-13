@@ -1,0 +1,13 @@
+com\ovs\service\voter\InfectionControlService.class
+com\ovs\dao\voter\InfectionControlDAOImpl.class
+com\ovs\model\MstDesignations.class
+com\ovs\response\LoginResponse.class
+com\ovs\model\MstEmployees.class
+com\ovs\config\WebConfig.class
+com\ovs\utils\TokenGenerator.class
+com\ovs\config\AppConfig.class
+com\ovs\dao\voter\InfectionControlDAO.class
+com\ovs\model\MstUsers.class
+com\ovs\service\voter\InfectionControlServiceImpl.class
+com\ovs\config\MyWebAppInitializer.class
+com\ovs\controller\InfectionControlController.class
