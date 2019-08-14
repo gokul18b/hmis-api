@@ -1,11 +1,15 @@
 package com.ovs.service.voter;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ovs.dao.voter.InfectionControlDAO;
+import com.ovs.model.Employee;
 import com.ovs.model.MstUsers;
+import com.ovs.response.EmployeeResponse;
 import com.ovs.response.LoginResponse;
 
 @Service
@@ -35,4 +39,20 @@ public class InfectionControlServiceImpl implements InfectionControlService {
 		}
 		return response;
 	}
+
+	@Override
+	public void addEmployee() {
+		// TODO Auto-generated method stub
+		infectionControlDAO.addEmployee();
+	}
+
+	@Override
+	public List<EmployeeResponse> employeeList() {
+		// TODO Auto-generated method stub
+		return infectionControlDAO.employeeList();
+	}
+
+	
+
+
 }

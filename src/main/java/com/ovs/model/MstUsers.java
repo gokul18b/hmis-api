@@ -32,8 +32,6 @@ public class MstUsers {
 	private String mobile_device_id;
 	@Column
 	private String app_login_token;
-	
-	
 
 	public int getId() {
 		return id;
@@ -43,7 +41,6 @@ public class MstUsers {
 		this.id = id;
 	}
 
-	
 	public Integer getUserref_id() {
 		return userref_id;
 	}
@@ -75,8 +72,6 @@ public class MstUsers {
 	public void setUser_type(String user_type) {
 		this.user_type = user_type;
 	}
-
-	
 
 	public String getDisplayname() {
 		return displayname;
@@ -117,9 +112,5 @@ public class MstUsers {
 	public void setApp_login_token(String app_login_token) {
 		this.app_login_token = app_login_token;
 	}
-
-	
-	
-	
 
 }
