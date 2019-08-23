@@ -14,23 +14,23 @@ public class MstUsers {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	@Column
+	@Column(name = "userref_id")
 	private Integer userref_id;
-	@Column
+	@Column(name = "username")
 	private String username;
-	@Column
+	@Column(name = "password")
 	private String password;
-	@Column
+	@Column(name = "user_type")
 	private String user_type;
-	@Column
+	@Column(name = "displayname")
 	private String displayname;
-	@Column
-	private int status;
-	@Column
-	private int is_deleted;
-	@Column
+	@Column(name = "status")
+	private Integer status;
+	@Column(name = "is_deleted")
+	private Integer is_deleted;
+	@Column(name = "mobile_device_id")
 	private String mobile_device_id;
-	@Column
+	@Column(name = "app_login_token")
 	private String app_login_token;
 
 	public int getId() {
