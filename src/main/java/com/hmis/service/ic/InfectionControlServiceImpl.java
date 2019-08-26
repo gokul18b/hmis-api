@@ -1,4 +1,4 @@
-package com.hmis.service;
+package com.hmis.service.ic;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +15,6 @@ import com.hmis.model.trn_infect_control_device_hdr;
 import com.hmis.response.ic.GetIcBundlesResponse;
 import com.hmis.response.ic.GetIcDevicesResponse;
 import com.hmis.response.ic.InfectControlDetailResponse;
-import com.hmis.response.ic.InfectDetails;
 import com.hmis.response.ic.InfectionControlSaveResponse;
 import com.hmis.response.ic.LoginResponse;
 
@@ -106,10 +105,10 @@ public class InfectionControlServiceImpl implements InfectionControlService {
 	@Override
 	public InfectionControlSaveResponse updateInfectionControl(
 			trn_infect_control_device_hdr trn_infect_control_device_hdr, Integer hdr_id) {
-		
+
 		InfectionControlSaveResponse response = new InfectionControlSaveResponse();
-		Integer Daoresponse = infectionControlDAO.updateInfectionControl(trn_infect_control_device_hdr,hdr_id);
-		
+		Integer Daoresponse = infectionControlDAO.updateInfectionControl(trn_infect_control_device_hdr, hdr_id);
+
 		if (Daoresponse == 1) {
 			response.setStatus(1);
 			response.setMessage("Successfully updated");
@@ -135,7 +134,7 @@ public class InfectionControlServiceImpl implements InfectionControlService {
 					getting_incompleted.getInfect_control_date(), getting_incompleted.getTemperature(),
 					getting_incompleted.getInsertion_date(), getting_incompleted.getRemoval_date());
 			response.setInsert_status("update");
-			response.setIn_completed_details(incomplete_response);
+			response.setIn_complete_detail(incomplete_response);
 		} else {
 			response.setInsert_status("insert");
 		}

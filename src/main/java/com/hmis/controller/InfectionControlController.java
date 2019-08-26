@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,7 +20,7 @@ import com.hmis.response.ic.InfectControlDetailResponse;
 import com.hmis.response.ic.InfectDetails;
 import com.hmis.response.ic.InfectionControlSaveResponse;
 import com.hmis.response.ic.LoginResponse;
-import com.hmis.service.InfectionControlService;
+import com.hmis.service.ic.InfectionControlService;
 
 @RestController
 @RequestMapping("/infection")
@@ -44,16 +45,14 @@ public class InfectionControlController {
 		return ResponseEntity.ok().body(infectionControlService.get_ic_bundle(device_id));
 	}
 
-	@PostMapping("/save_infection_control/{status}/{hdr_id}")
+	@PostMapping("/save_infection_control/{hdr_id}")
 	public ResponseEntity<InfectionControlSaveResponse> save_infection_control(
-			@RequestBody trn_infect_control_device_hdr trn_infect_control_device_hdr, @PathVariable String status,
+			@RequestBody trn_infect_control_device_hdr trn_infect_control_device_hdr,
 			@PathVariable Integer hdr_id) {
 		InfectionControlSaveResponse response = null;
-		if (status.equals("insert")) {
-			response = infectionControlService.saveInfectionControl(trn_infect_control_device_hdr);
-		} else if (status.equals("update")) {
-			response = infectionControlService.updateInfectionControl(trn_infect_control_device_hdr, hdr_id);
-		}
+		
+		response = infectionControlService.updateInfectionControl(trn_infect_control_device_hdr, hdr_id);
+		
 
 		return ResponseEntity.ok().body(response);
 	}
@@ -69,6 +68,7 @@ public class InfectionControlController {
 	@GetMapping("/get_infect_details/{device_id}/{visit_id}")
 	public ResponseEntity<InfectControlDetailResponse> getInfectDetails(@PathVariable Integer device_id,
 			@PathVariable Integer visit_id) {
+		System.out.println(visit_id);
 		return ResponseEntity.ok().body(infectionControlService.get_infectDetails(device_id, visit_id));
 	}
 }

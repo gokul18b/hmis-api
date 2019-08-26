@@ -8,7 +8,7 @@ import com.hmis.model.trn_infect_control_device_hdr;
 public class InfectControlDetailResponse {
 	private String insert_status;
 	private List<trn_infect_control_device_hdr> completed_details = new ArrayList<trn_infect_control_device_hdr>();
-	private trn_infect_control_device_hdr in_completed_details;
+	private trn_infect_control_device_hdr in_complete_detail;
 
 	
 	public String getInsert_status() {
@@ -27,18 +27,21 @@ public class InfectControlDetailResponse {
 		this.completed_details = completed_details;
 	}
 
-	public trn_infect_control_device_hdr getIn_completed_details() {
-		return in_completed_details;
+	
+
+	public trn_infect_control_device_hdr getIn_complete_detail() {
+		return in_complete_detail;
 	}
 
-	public void setIn_completed_details(trn_infect_control_device_hdr in_completed_details) {
-		this.in_completed_details = in_completed_details;
+	public void setIn_complete_detail(trn_infect_control_device_hdr in_complet_detail) {
+		this.in_complete_detail = in_complet_detail;
 	}
 
+	
 	@Override
 	public String toString() {
 		return "InfectControlDetailResponse [completed_details=" + completed_details + ", in_completed_details="
-				+ in_completed_details + "]";
+				+ in_complete_detail + "]";
 	}
 
 }

@@ -136,28 +136,34 @@ public class InfectionControlDAOImpl implements InfectionControlDAO {
 			finalHeaderObject.setInsertion_date(newHeaderObject.getInsertion_date());
 			finalHeaderObject.setRemoval_date(newHeaderObject.getRemoval_date());
 			session.update(finalHeaderObject);
+			
 
-			List<trn_infect_control_bundle_details> newBundleList = trn_infect_control_device_hdr
-					.getTrn_infect_control_bundle_details();
+			if (trn_infect_control_device_hdr.getTrn_infect_control_bundle_details() != null) {
+				List<trn_infect_control_bundle_details> bundleDetailsList = trn_infect_control_device_hdr.getTrn_infect_control_bundle_details();
+				if (bundleDetailsList.size() != 0) {
 
-			Criteria bundleCriteria = session.createCriteria(trn_infect_control_bundle_details.class);
-			Criteria hdr_criteria = bundleCriteria.createCriteria("trn_infect_control_device_hdr");
-			hdr_criteria.add(Restrictions.eq("id", hdr_id));
+					List<trn_infect_control_bundle_details> newBundleList = bundleDetailsList;
 
-			List<trn_infect_control_bundle_details> previousBundlesList = bundleCriteria.list();
+					Criteria bundleCriteria = session.createCriteria(trn_infect_control_bundle_details.class);
+					Criteria hdr_criteria = bundleCriteria.createCriteria("trn_infect_control_device_hdr");
+					hdr_criteria.add(Restrictions.eq("id", hdr_id));
+//
+					List<trn_infect_control_bundle_details> previousBundlesList = bundleCriteria.list();
+//
+					for (int i = 0; i < previousBundlesList.size(); i++) {
+						trn_infect_control_bundle_details finalBundleObject = previousBundlesList.get(i);
+						trn_infect_control_bundle_details newBundleObject = newBundleList.get(i);
+						finalBundleObject.setId(newBundleObject.getId());
+						finalBundleObject.setTrn_infect_control_device_hdr(finalHeaderObject);
+						finalBundleObject
+								.setMst_infect_control_bundle_id(newBundleObject.getMst_infect_control_bundle_id());
+						finalBundleObject.setOption_value(newBundleObject.getOption_value());
+						finalBundleObject.setRemarks(newBundleObject.getRemarks());
 
-			for (int i = 0; i < previousBundlesList.size(); i++) {
-				trn_infect_control_bundle_details finalBundleObject = previousBundlesList.get(i);
-				trn_infect_control_bundle_details newBundleObject = newBundleList.get(i);
-				finalBundleObject.setId(newBundleObject.getId());
-				finalBundleObject.setTrn_infect_control_device_hdr(finalHeaderObject);
-				finalBundleObject.setMst_infect_control_bundle_id(newBundleObject.getMst_infect_control_bundle_id());
-				finalBundleObject.setOption_value(newBundleObject.getOption_value());
-				finalBundleObject.setRemarks(newBundleObject.getRemarks());
-
-				session.update(finalBundleObject);
+						session.update(finalBundleObject);
+					}
+				}
 			}
-
 			return 1;
 		} catch (HibernateException e) {
 			System.out.println(e.getMessage());
