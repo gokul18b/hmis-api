@@ -8,15 +8,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.hmis.dao.ic.InfectionControlDAO;
-import com.hmis.model.MstInfectControlBundle;
-import com.hmis.model.MstInfectControlDevices;
-import com.hmis.model.MstUsers;
-import com.hmis.model.trn_infect_control_device_hdr;
-import com.hmis.response.ic.GetIcBundlesResponse;
-import com.hmis.response.ic.GetIcDevicesResponse;
-import com.hmis.response.ic.InfectControlDetailResponse;
-import com.hmis.response.ic.InfectionControlSaveResponse;
-import com.hmis.response.ic.LoginResponse;
+import com.hmis.entity.MstInfectControlBundle;
+import com.hmis.entity.MstInfectControlDevices;
+import com.hmis.entity.MstUsers;
+import com.hmis.entity.trn_infect_control_device_hdr;
+import com.hmis.response.GetIcBundlesResponse;
+import com.hmis.response.GetIcDevicesResponse;
+import com.hmis.response.InfectControlDetailResponse;
+import com.hmis.response.InfectionControlSaveResponse;
+import com.hmis.response.LoginResponse;
 
 @Service
 @Transactional
@@ -85,6 +85,28 @@ public class InfectionControlServiceImpl implements InfectionControlService {
 		}
 		return getIcBundlesResponse;
 	}
+	
+	
+	@Override
+	public GetIcBundlesResponse get_ic_bundles_daily(Integer device_id) {
+		GetIcBundlesResponse getIcBundlesResponse = new GetIcBundlesResponse();
+		List<MstInfectControlBundle> infectionControlBundles = new ArrayList<>();
+		List<Object[]> results = infectionControlDAO.get_ic_bundle_daily(device_id);
+		if (results.size() != 0) {
+			for (Object[] result : results) {
+				Integer id = (Integer) result[0];
+				String audit_name = (String) result[1];
+				Integer infection_control_device_id = (Integer) result[2];
+
+				infectionControlBundles.add(new MstInfectControlBundle(id, infection_control_device_id, audit_name));
+			}
+			getIcBundlesResponse.setResults(infectionControlBundles);
+			getIcBundlesResponse.setStatus(1);
+		} else {
+			getIcBundlesResponse.setStatus(0);
+		}
+		return getIcBundlesResponse;
+	}
 
 	@Override
 	public InfectionControlSaveResponse saveInfectionControl(
@@ -131,7 +153,7 @@ public class InfectionControlServiceImpl implements InfectionControlService {
 			trn_infect_control_device_hdr incomplete_response = new trn_infect_control_device_hdr();
 			incomplete_response = new trn_infect_control_device_hdr(getting_incompleted.getId(),
 					getting_incompleted.getMst_infect_control_device_id(), getting_incompleted.getVisit_id(),
-					getting_incompleted.getInfect_control_date(), getting_incompleted.getTemperature(),
+//					getting_incompleted.getInfect_control_date(),
 					getting_incompleted.getInsertion_date(), getting_incompleted.getRemoval_date());
 			response.setInsert_status("update");
 			response.setIn_complete_detail(incomplete_response);
@@ -144,9 +166,13 @@ public class InfectionControlServiceImpl implements InfectionControlService {
 
 			for (trn_infect_control_device_hdr row : getting_completed_list) {
 				complete_responseList.add(new trn_infect_control_device_hdr(row.getId(),
-						row.getMst_infect_control_device_id(), row.getVisit_id(), row.getInfect_control_date(),
-						row.getTemperature(), row.getInsertion_date(), row.getRemoval_date()));
+						row.getMst_infect_control_device_id(), row.getVisit_id(), 
+//						row.getInfect_control_date(), 
+						row.getInsertion_date(), row.getRemoval_date()));
+							
 			}
+			
+			
 
 			response.setCompleted_details(complete_responseList);
 
@@ -154,5 +180,7 @@ public class InfectionControlServiceImpl implements InfectionControlService {
 		return response;
 
 	}
+
+	
 
 }

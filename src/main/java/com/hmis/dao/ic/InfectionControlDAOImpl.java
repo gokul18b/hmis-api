@@ -18,10 +18,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.providers.encoding.Md5PasswordEncoder;
 import org.springframework.stereotype.Repository;
 
-import com.hmis.model.MstInfectControlDevices;
-import com.hmis.model.MstUsers;
-import com.hmis.model.trn_infect_control_bundle_details;
-import com.hmis.model.trn_infect_control_device_hdr;
+import com.hmis.entity.MstInfectControlDevices;
+import com.hmis.entity.MstUsers;
+import com.hmis.entity.trn_infect_control_bundle_details;
+import com.hmis.entity.trn_infect_control_bundle_details_daily;
+import com.hmis.entity.trn_infect_control_daily_hdr;
+import com.hmis.entity.trn_infect_control_device_hdr;
 import com.hmis.utils.TokenGenerator;
 
 @Repository
@@ -87,7 +89,17 @@ public class InfectionControlDAOImpl implements InfectionControlDAO {
 	@Override
 	public List<Object[]> get_ic_bundle(Integer device_id) {
 		Session session = sessionFactory.getCurrentSession();
-		String hql = "SELECT bundle.id, bundle.bundle_name,bundle.mst_infect_control_devices_id From mst_infect_control_bundle bundle where bundle.mst_infect_control_devices_id=?";
+		String hql = "SELECT bundle.id, bundle.bundle_name,bundle.mst_infect_control_devices_id From mst_infect_control_bundle bundle where bundle.mst_infect_control_devices_id=? order by bundle.id";
+		Query query = session.createQuery(hql);
+		query.setParameter(0, device_id);
+		List<Object[]> results = query.list();
+		return results;
+	}
+
+	@Override
+	public List<Object[]> get_ic_bundle_daily(Integer device_id) {
+		Session session = sessionFactory.getCurrentSession();
+		String hql = "SELECT bundle.id, bundle.bundle_name,bundle.mst_infect_control_devices_id From mst_infect_control_bundle_daily bundle where bundle.mst_infect_control_devices_id=? order by bundle.id";
 		Query query = session.createQuery(hql);
 		query.setParameter(0, device_id);
 		List<Object[]> results = query.list();
@@ -98,10 +110,16 @@ public class InfectionControlDAOImpl implements InfectionControlDAO {
 	@Override
 	public Integer saveInfectionControl(trn_infect_control_device_hdr trn_infect_control_device_hdr) {
 		Session session = sessionFactory.getCurrentSession();
+		System.out.println(trn_infect_control_device_hdr);
 		try {
 			Criteria criteria = session.createCriteria(trn_infect_control_device_hdr.class);
 
 			session.save(trn_infect_control_device_hdr);
+			
+			
+			trn_infect_control_daily_hdr trn_infect_control_daily_hdr = trn_infect_control_device_hdr.getTrn_infect_control_daily_hdr().get(0);
+			trn_infect_control_daily_hdr.setTrn_infect_control_device_hdr(trn_infect_control_device_hdr);
+			session.save(trn_infect_control_daily_hdr);
 
 			List<trn_infect_control_bundle_details> trn_infect_control_bundle_details_list = trn_infect_control_device_hdr
 					.getTrn_infect_control_bundle_details();
@@ -113,6 +131,7 @@ public class InfectionControlDAOImpl implements InfectionControlDAO {
 				session.save(trn_infect_control_bundle_details);
 			}
 
+			
 			return 1;
 		} catch (HibernateException e) {
 			return null;
@@ -120,53 +139,42 @@ public class InfectionControlDAOImpl implements InfectionControlDAO {
 
 	}
 
+	@Transactional
 	@Override
 	public Integer updateInfectionControl(trn_infect_control_device_hdr trn_infect_control_device_hdr, Integer hdr_id) {
+		// System.out.println(trn_infect_control_device_hdr);
 		Session session = sessionFactory.getCurrentSession();
 		try {
-			trn_infect_control_device_hdr newHeaderObject = trn_infect_control_device_hdr;
+			trn_infect_control_device_hdr new_trn_infect_control_device_hdr = session
+					.get(trn_infect_control_device_hdr.class, hdr_id);
+//			new_trn_infect_control_device_hdr
+//					.setInfect_control_date(trn_infect_control_device_hdr.getInfect_control_date());
+			new_trn_infect_control_device_hdr.setInsertion_date(trn_infect_control_device_hdr.getInsertion_date());
+			new_trn_infect_control_device_hdr
+					.setMst_infect_control_device_id(trn_infect_control_device_hdr.getMst_infect_control_device_id());
+			new_trn_infect_control_device_hdr.setRemoval_date(trn_infect_control_device_hdr.getRemoval_date());
+			new_trn_infect_control_device_hdr.setVisit_id(trn_infect_control_device_hdr.getVisit_id());
+			session.update(new_trn_infect_control_device_hdr);
 
-			trn_infect_control_device_hdr finalHeaderObject = session.get(trn_infect_control_device_hdr.getClass(),
-					hdr_id);
+			trn_infect_control_daily_hdr new_trn_infect_control_daily_hdr = trn_infect_control_device_hdr
+					.getTrn_infect_control_daily_hdr().get(0);
+			new_trn_infect_control_daily_hdr.setTrn_infect_control_device_hdr(new_trn_infect_control_device_hdr);
+			session.save(new_trn_infect_control_daily_hdr);
 
-			finalHeaderObject.setVisit_id(newHeaderObject.getVisit_id());
-			finalHeaderObject.setMst_infect_control_device_id(newHeaderObject.getMst_infect_control_device_id());
-			finalHeaderObject.setInfect_control_date(newHeaderObject.getInfect_control_date());
-			finalHeaderObject.setTemperature(newHeaderObject.getTemperature());
-			finalHeaderObject.setInsertion_date(newHeaderObject.getInsertion_date());
-			finalHeaderObject.setRemoval_date(newHeaderObject.getRemoval_date());
-			session.update(finalHeaderObject);
-			
+			List<trn_infect_control_bundle_details_daily> new_trn_infect_control_bundle_details_daily = new_trn_infect_control_daily_hdr
+					.getTrn_infect_control_bundle_daily_details();
 
-			if (trn_infect_control_device_hdr.getTrn_infect_control_bundle_details() != null) {
-				List<trn_infect_control_bundle_details> bundleDetailsList = trn_infect_control_device_hdr.getTrn_infect_control_bundle_details();
-				if (bundleDetailsList.size() != 0) {
-
-					List<trn_infect_control_bundle_details> newBundleList = bundleDetailsList;
-
-					Criteria bundleCriteria = session.createCriteria(trn_infect_control_bundle_details.class);
-					Criteria hdr_criteria = bundleCriteria.createCriteria("trn_infect_control_device_hdr");
-					hdr_criteria.add(Restrictions.eq("id", hdr_id));
-//
-					List<trn_infect_control_bundle_details> previousBundlesList = bundleCriteria.list();
-//
-					for (int i = 0; i < previousBundlesList.size(); i++) {
-						trn_infect_control_bundle_details finalBundleObject = previousBundlesList.get(i);
-						trn_infect_control_bundle_details newBundleObject = newBundleList.get(i);
-						finalBundleObject.setId(newBundleObject.getId());
-						finalBundleObject.setTrn_infect_control_device_hdr(finalHeaderObject);
-						finalBundleObject
-								.setMst_infect_control_bundle_id(newBundleObject.getMst_infect_control_bundle_id());
-						finalBundleObject.setOption_value(newBundleObject.getOption_value());
-						finalBundleObject.setRemarks(newBundleObject.getRemarks());
-
-						session.update(finalBundleObject);
-					}
-				}
+			Iterator<trn_infect_control_bundle_details_daily> iterator = new_trn_infect_control_bundle_details_daily
+					.iterator();
+			while (iterator.hasNext()) {
+				trn_infect_control_bundle_details_daily trn_infect_control_bundle_details_daily = iterator.next();
+				trn_infect_control_bundle_details_daily
+						.setTrn_infect_control_daily_hdr(new_trn_infect_control_daily_hdr);
+				session.save(trn_infect_control_bundle_details_daily);
 			}
+
 			return 1;
 		} catch (HibernateException e) {
-			System.out.println(e.getMessage());
 			return 0;
 		}
 
@@ -191,6 +199,7 @@ public class InfectionControlDAOImpl implements InfectionControlDAO {
 
 	@Override
 	public trn_infect_control_device_hdr get_incomplete_ic(Integer device_id, Integer visit_id) {
+		System.out.println("incomplete");
 		Session session = sessionFactory.getCurrentSession();
 		try {
 			Criteria criteria = session.createCriteria(trn_infect_control_device_hdr.class)
@@ -199,10 +208,14 @@ public class InfectionControlDAOImpl implements InfectionControlDAO {
 					.add(Restrictions.isNull("removal_date"));
 			Object object = criteria.uniqueResult();
 			trn_infect_control_device_hdr incomplete_details = (trn_infect_control_device_hdr) object;
+//			System.out.println("incomplete_details-->"+incomplete_details);
 			return incomplete_details;
 		} catch (HibernateException e) {
+			System.out.println(e);
 			return null;
 		}
 	}
+	
+	
 
 }

@@ -12,14 +12,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hmis.model.MstUsers;
-import com.hmis.model.trn_infect_control_device_hdr;
-import com.hmis.response.ic.GetIcBundlesResponse;
-import com.hmis.response.ic.GetIcDevicesResponse;
-import com.hmis.response.ic.InfectControlDetailResponse;
-import com.hmis.response.ic.InfectDetails;
-import com.hmis.response.ic.InfectionControlSaveResponse;
-import com.hmis.response.ic.LoginResponse;
+import com.hmis.entity.MstUsers;
+import com.hmis.entity.trn_infect_control_device_hdr;
+import com.hmis.response.GetIcBundlesResponse;
+import com.hmis.response.GetIcDevicesResponse;
+import com.hmis.response.InfectControlDetailResponse;
+import com.hmis.response.InfectDetails;
+import com.hmis.response.InfectionControlSaveResponse;
+import com.hmis.response.LoginResponse;
 import com.hmis.service.ic.InfectionControlService;
 
 @RestController
@@ -45,14 +45,17 @@ public class InfectionControlController {
 		return ResponseEntity.ok().body(infectionControlService.get_ic_bundle(device_id));
 	}
 
+	@GetMapping("/get_ic_bundles_daily/{device_id}")
+	public ResponseEntity<GetIcBundlesResponse> get_ic_bundles_daily(@PathVariable Integer device_id) {
+		return ResponseEntity.ok().body(infectionControlService.get_ic_bundles_daily(device_id));
+	}
+
 	@PostMapping("/save_infection_control/{hdr_id}")
 	public ResponseEntity<InfectionControlSaveResponse> save_infection_control(
-			@RequestBody trn_infect_control_device_hdr trn_infect_control_device_hdr,
-			@PathVariable Integer hdr_id) {
+			@RequestBody trn_infect_control_device_hdr trn_infect_control_device_hdr, @PathVariable Integer hdr_id) {
 		InfectionControlSaveResponse response = null;
-		
+		System.out.println(trn_infect_control_device_hdr);
 		response = infectionControlService.updateInfectionControl(trn_infect_control_device_hdr, hdr_id);
-		
 
 		return ResponseEntity.ok().body(response);
 	}
@@ -68,7 +71,7 @@ public class InfectionControlController {
 	@GetMapping("/get_infect_details/{device_id}/{visit_id}")
 	public ResponseEntity<InfectControlDetailResponse> getInfectDetails(@PathVariable Integer device_id,
 			@PathVariable Integer visit_id) {
-		System.out.println(visit_id);
-		return ResponseEntity.ok().body(infectionControlService.get_infectDetails(device_id, visit_id));
+		InfectControlDetailResponse response = infectionControlService.get_infectDetails(device_id, visit_id);
+		return ResponseEntity.ok().body(response);
 	}
 }
