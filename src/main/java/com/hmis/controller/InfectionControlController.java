@@ -19,7 +19,11 @@ import com.hmis.response.GetIcDevicesResponse;
 import com.hmis.response.InfectControlDetailResponse;
 import com.hmis.response.InfectDetails;
 import com.hmis.response.InfectionControlSaveResponse;
+
 import com.hmis.response.LoginResponse;
+import com.hmis.response.getBundleReport.GetBundleReport;
+import com.hmis.response.get_ic_summary.InfectionDeviceSummary;
+import com.hmis.response.ic_patient_report.IcPatientReport;
 import com.hmis.service.ic.InfectionControlService;
 
 @RestController
@@ -74,4 +78,22 @@ public class InfectionControlController {
 		InfectControlDetailResponse response = infectionControlService.get_infectDetails(device_id, visit_id);
 		return ResponseEntity.ok().body(response);
 	}
+
+	@GetMapping("/get_report_insertion_daily/{hdr_id}")
+	public ResponseEntity<IcPatientReport> get_report_insertion_daily(@PathVariable Integer hdr_id) {
+		return ResponseEntity.ok().body(infectionControlService.getInsertionDailyReport(hdr_id));
+
+	}
+
+	@GetMapping("/get_ic_summary/{from_date}/{to_date}")
+	public ResponseEntity<List<InfectionDeviceSummary>> get_ic_summary(@PathVariable String from_date , @PathVariable String to_date) {
+		return ResponseEntity.ok().body(infectionControlService.getIcSummary(from_date,to_date));
+
+	}
+	
+	@GetMapping("/get_bundle_report/{from_date}/{to_date}")
+	public ResponseEntity<GetBundleReport> get_bundle_report(@PathVariable String from_date , @PathVariable String to_date){
+		return ResponseEntity.ok().body(infectionControlService.get_bundle_report(from_date,to_date));
+	}
+	
 }

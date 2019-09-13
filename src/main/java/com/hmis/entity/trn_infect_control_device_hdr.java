@@ -30,6 +30,9 @@ public class trn_infect_control_device_hdr {
 
 	@Column(name = "visit_id")
 	private Integer visit_id;
+	
+	@Column(name = "bed_id")
+	private Integer bed_id;
 
 //	@Column(name = "infect_control_date")
 //	@Temporal(TemporalType.DATE)
@@ -92,6 +95,8 @@ public class trn_infect_control_device_hdr {
 	public void setVisit_id(Integer visit_id) {
 		this.visit_id = visit_id;
 	}
+	
+	
 
 //	public Date getInfect_control_date() {
 //		return infect_control_date;
@@ -100,6 +105,14 @@ public class trn_infect_control_device_hdr {
 //	public void setInfect_control_date(Date infect_control_date) {
 //		this.infect_control_date = infect_control_date;
 //	}
+
+	public Integer getBed_id() {
+		return bed_id;
+	}
+
+	public void setBed_id(Integer bed_id) {
+		this.bed_id = bed_id;
+	}
 
 	public Date getInsertion_date() {
 		return insertion_date;

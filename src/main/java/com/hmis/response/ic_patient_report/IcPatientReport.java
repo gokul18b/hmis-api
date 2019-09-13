@@ -5,7 +5,7 @@ import java.util.List;
 
 public class IcPatientReport {
 	private Integer status;
-	List<InsertionBundle> insertionBundles = new ArrayList<>();
+	InsertionBundle insertionBundles;
 	List<DailyBundle> dailyBundles = new ArrayList<>();
 
 	public Integer getStatus() {
@@ -16,11 +16,11 @@ public class IcPatientReport {
 		this.status = status;
 	}
 
-	public List<InsertionBundle> getInsertionBundles() {
+	public InsertionBundle getInsertionBundles() {
 		return insertionBundles;
 	}
 
-	public void setInsertionBundles(List<InsertionBundle> insertionBundles) {
+	public void setInsertionBundles(InsertionBundle insertionBundles) {
 		this.insertionBundles = insertionBundles;
 	}
 
