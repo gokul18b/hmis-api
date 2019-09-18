@@ -8,6 +8,7 @@ public class LoginResponse {
 	private String displayname;
 	private String app_login_token;
 	private String design_name;
+	private String role_name;
 
 	public int getStatus() {
 		return status;
@@ -56,5 +57,15 @@ public class LoginResponse {
 	public void setDesign_name(String design_name) {
 		this.design_name = design_name;
 	}
+
+	public String getRole_name() {
+		return role_name;
+	}
+
+	public void setRole_name(String role_name) {
+		this.role_name = role_name;
+	}
+	
+	
 
 }

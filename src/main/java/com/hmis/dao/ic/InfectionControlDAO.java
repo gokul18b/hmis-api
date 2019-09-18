@@ -6,8 +6,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 
 import org.hibernate.Criteria;
@@ -21,7 +19,7 @@ import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.providers.encoding.Md5PasswordEncoder;
 import org.springframework.stereotype.Repository;
-import com.hmis.entity.MstInfectControlBundle;
+
 import com.hmis.entity.MstInfectControlDevices;
 import com.hmis.entity.MstUsers;
 import com.hmis.entity.trn_infect_control_bundle_details;
@@ -356,7 +354,8 @@ public class InfectionControlDAO {
 				+ "				left join mst_rooms mst_rooms on(mst_rooms.id=mst_beds.mst_room_id)\r\n"
 				+ "				left join mst_floors mst_floors on(mst_floors.id=mst_rooms.mst_floor_id)\r\n"
 				+ "				left join mst_blocks mst_blocks on(mst_blocks.id=mst_floors.mst_block_id)\r\n"
-				+ "				where details.trn_infect_control_device_hdr_id in (select id from trn_infect_control_device_hdr where insertion_date between '"+from_date+" 00:00:00' and  '"+to_date+" 23:59:59' ) \r\n"
+				+ "				where details.trn_infect_control_device_hdr_id in (select id from trn_infect_control_device_hdr where insertion_date between '"
+				+ from_date + " 00:00:00' and  '" + to_date + " 23:59:59' ) \r\n"
 				+ "				and details.option_value='No' \r\n"
 				+ "				group by mst_blocks.block_name || '-' ||mst_floors.floor_name";
 
@@ -376,8 +375,8 @@ public class InfectionControlDAO {
 				+ "left join mst_rooms on(mst_rooms.id=mst_beds.mst_room_id)\r\n"
 				+ "left join mst_floors on(mst_floors.id=mst_rooms.mst_floor_id)\r\n"
 				+ "left join mst_blocks on(mst_blocks.id=mst_floors.mst_block_id)\r\n"
-				+ "where ddetails.option_value='No' \r\n"
-				+ "and det_hdr.bundle_date between '"+from_date+" 00:00:00' and  '"+to_date+" 23:59:59'\r\n"
+				+ "where ddetails.option_value='No' \r\n" + "and det_hdr.bundle_date between '" + from_date
+				+ " 00:00:00' and  '" + to_date + " 23:59:59'\r\n"
 				+ "group by mst_blocks.block_name || '-' ||mst_floors.floor_name,ddetails.option_value";
 
 		Query query = session.createSQLQuery(hql);

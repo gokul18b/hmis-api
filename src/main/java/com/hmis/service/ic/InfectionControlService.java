@@ -24,10 +24,9 @@ import com.hmis.response.getBundleReport.InsertionBundleReport;
 import com.hmis.response.get_ic_summary.InfectionDeviceSummary;
 import com.hmis.response.get_ic_summary.InfectionDeviceSummaryDetails;
 import com.hmis.response.ic_patient_report.DailyBundle;
-import com.hmis.response.ic_patient_report.DailyBundleDetails;
 import com.hmis.response.ic_patient_report.IcPatientReport;
 import com.hmis.response.ic_patient_report.InsertionBundle;
-import com.hmis.response.ic_patient_report.InsertionBundleDetails;
+
 
 @Service
 @Transactional
