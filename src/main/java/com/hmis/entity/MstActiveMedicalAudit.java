@@ -23,6 +23,9 @@ public class MstActiveMedicalAudit {
 
 	@Column(name = "question_name")
 	public String question_name;
+	
+	@Column(name = "question_type")
+	public String question_type;
 
 	@Column(name = "status")
 	public Integer status;

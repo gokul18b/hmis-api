@@ -3,6 +3,7 @@ package com.hmis.response;
 public class LoginResponse {
 
 	private int status;
+	private int userref_id;
 	private String message;
 	private String proile_image = "";
 	private String displayname;
@@ -16,6 +17,16 @@ public class LoginResponse {
 
 	public void setStatus(int status) {
 		this.status = status;
+	}
+	
+	
+
+	public int getUserref_id() {
+		return userref_id;
+	}
+
+	public void setUserref_id(int userref_id) {
+		this.userref_id = userref_id;
 	}
 
 	public String getMessage() {

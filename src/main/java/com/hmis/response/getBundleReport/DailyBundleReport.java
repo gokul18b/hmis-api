@@ -1,25 +1,36 @@
 package com.hmis.response.getBundleReport;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DailyBundleReport {
-	private String ward_name;
-	private BigInteger count;
+	private Integer floor_id;
+	private String floor_name;
+	List<DailyBundleDetails> details = new ArrayList<>();
 
-	public String getWard_name() {
-		return ward_name;
+	public Integer getFloor_id() {
+		return floor_id;
 	}
 
-	public void setWard_name(String ward_name) {
-		this.ward_name = ward_name;
+	public void setFloor_id(Integer floor_id) {
+		this.floor_id = floor_id;
 	}
 
-	public BigInteger getCount() {
-		return count;
+	public String getFloor_name() {
+		return floor_name;
 	}
 
-	public void setCount(BigInteger count) {
-		this.count = count;
+	public void setFloor_name(String floor_name) {
+		this.floor_name = floor_name;
+	}
+
+	public List<DailyBundleDetails> getDetails() {
+		return details;
+	}
+
+	public void setDetails(List<DailyBundleDetails> details) {
+		this.details = details;
 	}
 
 }

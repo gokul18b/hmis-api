@@ -27,6 +27,14 @@ public class TrnActiveMedicalAuditDetails {
 
 	@Column(name = "option_value")
 	private String option_value;
+	
+	@Column(name = "remarks")
+	private String remarks;
+	
+	@Column(name="minutes")
+	private Integer total_minutes;
+	
+	
 
 //	public MstActiveMedicalAudit getMstActiveMedicalAudit() {
 //		return mstActiveMedicalAudit;
@@ -67,6 +75,25 @@ public class TrnActiveMedicalAuditDetails {
 	public void setMst_active_medical_audit_id(Integer mst_active_medical_audit_id) {
 		this.mst_active_medical_audit_id = mst_active_medical_audit_id;
 	}
+
+	public String getRemarks() {
+		return remarks;
+	}
+
+	public void setRemarks(String remarks) {
+		this.remarks = remarks;
+	}
+
+	public Integer getTotal_minutes() {
+		return total_minutes;
+	}
+
+	public void setTotal_minutes(Integer total_minutes) {
+		this.total_minutes = total_minutes;
+	}
+
+	
+	
 	
 	
 

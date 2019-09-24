@@ -18,15 +18,16 @@ import com.hmis.response.GetIcDevicesResponse;
 import com.hmis.response.InfectControlDetailResponse;
 import com.hmis.response.InfectionControlSaveResponse;
 import com.hmis.response.LoginResponse;
+import com.hmis.response.getBundleReport.DailyBundleDetails;
 import com.hmis.response.getBundleReport.DailyBundleReport;
 import com.hmis.response.getBundleReport.GetBundleReport;
+import com.hmis.response.getBundleReport.InsertionBundleDetails;
 import com.hmis.response.getBundleReport.InsertionBundleReport;
 import com.hmis.response.get_ic_summary.InfectionDeviceSummary;
 import com.hmis.response.get_ic_summary.InfectionDeviceSummaryDetails;
 import com.hmis.response.ic_patient_report.DailyBundle;
 import com.hmis.response.ic_patient_report.IcPatientReport;
 import com.hmis.response.ic_patient_report.InsertionBundle;
-
 
 @Service
 @Transactional
@@ -246,31 +247,122 @@ public class InfectionControlService {
 	}
 
 	public GetBundleReport get_bundle_report(String from_date, String to_date) {
-		List<Object[]> obj_insertion_bundle = infectionControlDAO.getInsertionBundleSummary(from_date,to_date);
-		List<Object[]> obj_daily_bundle = infectionControlDAO.getDailyBundleSummary(from_date,to_date);
 		GetBundleReport getBundleReport = new GetBundleReport();
+		List<Object[]> obj_insertion_bundle = infectionControlDAO.getInsertionBundleSummary(from_date, to_date);
 		
-		List<InsertionBundleReport> insertion_report_list= new ArrayList<>();  
+		
+		ArrayList<Integer> floorIdList = new ArrayList<>();
+		ArrayList<String> floorNameList = new ArrayList<>();
+
 		for (Object[] row : obj_insertion_bundle) {
-			String ward_name = (String) row[0];
-			BigInteger count = (BigInteger) row[1];
-			InsertionBundleReport insertionBundleReport = new InsertionBundleReport();
-			insertionBundleReport.setWard_name(ward_name);
-			insertionBundleReport.setCount(count);
-			insertion_report_list.add(insertionBundleReport);
+			Integer floor_id = (Integer) row[0];
+			String floor_name = (String) row[1];
+
+			if (floorIdList.size() == 0) {
+				floorIdList.add(floor_id);
+				floorNameList.add(floor_name);
+			}
+
+			if(!floorIdList.contains(floor_id)) {
+				floorIdList.add(floor_id);
+				floorNameList.add(floor_name);
+			}
 		}
-		getBundleReport.setInsertion_bundle(insertion_report_list);
+
 		
-		List<DailyBundleReport> daily_report_list= new ArrayList<>();  
-		for (Object[] row : obj_daily_bundle) {
-			String ward_name = (String) row[0];
-			BigInteger count = (BigInteger) row[1];
-			DailyBundleReport dailyBundleReport = new DailyBundleReport();
-			dailyBundleReport.setWard_name(ward_name);
-			dailyBundleReport.setCount(count);
-			daily_report_list.add(dailyBundleReport);
+		List<InsertionBundleReport> insertionBundleReportList = new ArrayList<>();
+		
+		for (int i = 0; i < floorIdList.size(); i++) {
+			InsertionBundleReport insertionBundleReport = new InsertionBundleReport();
+			insertionBundleReport.setFloor_id(floorIdList.get(i));
+			insertionBundleReport.setFloor_name(floorNameList.get(i));
+			
+			List<InsertionBundleDetails> insertionBundleDetailsList = new ArrayList<>();
+			
+			for (Object[] row : obj_insertion_bundle) {
+				Integer floor_id = (Integer) row[0];
+				String floor_name = (String) row[1];
+				String device_name = (String) row[2];
+				BigInteger total_count = (BigInteger) row[3];
+				BigInteger issue_count = (BigInteger) row[4];
+				
+				
+				if(floorIdList.get(i)==floor_id) {
+					System.out.println("Floor_id"+floor_id+" -"+ (i)+" -- "+floorIdList.get(i));
+					InsertionBundleDetails insertionBundleDetails = new InsertionBundleDetails();
+					insertionBundleDetails.setDevice_name(device_name);
+					insertionBundleDetails.setTotal_count(total_count);
+					insertionBundleDetails.setIssue_count(issue_count);
+					insertionBundleDetailsList.add(insertionBundleDetails);
+					
+				}
+				
+			}
+			insertionBundleReport.setDetails(insertionBundleDetailsList);
+			
+			insertionBundleReportList.add(insertionBundleReport);
 		}
-		getBundleReport.setDaily_bundle(daily_report_list);
+		
+		getBundleReport.setInsertion_bundle(insertionBundleReportList);
+		
+		
+//		DAILY BUNDLE REPORT
+		List<Object[]> obj_daily_bundle = infectionControlDAO.getDailyBundleSummary(from_date, to_date);
+		ArrayList<Integer> floorIdList_daily = new ArrayList<>();
+		ArrayList<String> floorNameList_daily = new ArrayList<>();
+
+		for (Object[] row : obj_daily_bundle) {
+			Integer floor_id = (Integer) row[0];
+			String floor_name = (String) row[1];
+
+			if (floorIdList_daily.size() == 0) {
+				floorIdList_daily.add(floor_id);
+				floorNameList_daily.add(floor_name);
+			}
+
+			if(!floorIdList_daily.contains(floor_id)) {
+				floorIdList_daily.add(floor_id);
+				floorNameList_daily.add(floor_name);
+			}
+		}
+
+		
+		List<DailyBundleReport> dailyBundleReportList = new ArrayList<>();
+		
+		for (int i = 0; i < floorIdList_daily.size(); i++) {
+			DailyBundleReport dailyBundleReport = new DailyBundleReport();
+			dailyBundleReport.setFloor_id(floorIdList_daily.get(i));
+			dailyBundleReport.setFloor_name(floorNameList_daily.get(i));
+			
+			List<DailyBundleDetails> dailyBundleDetailsList = new ArrayList<>();
+			
+			for (Object[] row : obj_daily_bundle) {
+				Integer floor_id = (Integer) row[0];
+				String floor_name = (String) row[1];
+				String device_name = (String) row[2];
+				BigInteger total_count = (BigInteger) row[3];
+				BigInteger issue_count = (BigInteger) row[4];
+				
+				
+				if(floorIdList_daily.get(i)==floor_id) {
+					System.out.println("Floor_id"+floor_id+" -"+ (i)+" -- "+floorIdList_daily.get(i));
+					DailyBundleDetails dailyBundleDetails = new DailyBundleDetails();
+					dailyBundleDetails.setDevice_name(device_name);
+					dailyBundleDetails.setTotal_count(total_count);
+					dailyBundleDetails.setIssue_count(issue_count);
+					dailyBundleDetailsList.add(dailyBundleDetails);
+					
+				}
+				
+			}
+			dailyBundleReport.setDetails(dailyBundleDetailsList);
+			
+			dailyBundleReportList.add(dailyBundleReport);
+		}
+		
+		getBundleReport.setDaily_bundle(dailyBundleReportList);
+		
+
 		return getBundleReport;
 	}
 }

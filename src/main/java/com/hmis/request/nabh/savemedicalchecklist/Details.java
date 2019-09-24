@@ -4,6 +4,10 @@ public class Details {
 	private Integer trn_active_medical_record_audit_id;
 	private Integer mst_active_medical_audit_id;
 	private String option_value;
+	private Integer total_minutes;
+	
+
+	private String remarks;
 
 	public Integer getTrn_active_medical_record_audit_id() {
 		return trn_active_medical_record_audit_id;
@@ -28,5 +32,23 @@ public class Details {
 	public void setOption_value(String option_value) {
 		this.option_value = option_value;
 	}
+
+	public String getRemarks() {
+		return remarks;
+	}
+
+	public void setRemarks(String remarks) {
+		this.remarks = remarks;
+	}
+
+	public Integer getTotal_minutes() {
+		return total_minutes;
+	}
+
+	public void setTotal_minutes(Integer total_minutes) {
+		this.total_minutes = total_minutes;
+	}
+	
+	
 
 }

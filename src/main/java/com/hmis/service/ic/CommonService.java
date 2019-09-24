@@ -33,6 +33,7 @@ public class CommonService {
 				String role_name = (String) resultObject[2];
 
 				login_response.setStatus(1);
+				login_response.setUserref_id(id);
 				login_response.setMessage("Login success");
 				login_response.setApp_login_token(infectionControlDAO.token_generation(id));
 				login_response.setDisplayname(display_name);

@@ -168,12 +168,10 @@ public class trn_infect_control_device_hdr {
 	@Override
 	public String toString() {
 		return "trn_infect_control_device_hdr [id=" + id + ", mst_infect_control_device_id="
-				+ mst_infect_control_device_id + ", visit_id=" + visit_id + ", "
-//						+ "infect_control_date="
-//				+ infect_control_date + ", "
-						+ "insertion_date=" + insertion_date + ", removal_date=" + removal_date
-				+ ", trn_infect_control_bundle_details=" + trn_infect_control_bundle_details
-				+ ", trn_infect_control_daily_hdr=" + trn_infect_control_daily_hdr + "]";
+				+ mst_infect_control_device_id + ", visit_id=" + visit_id + ", bed_id=" + bed_id + ", insertion_date="
+				+ insertion_date + ", removal_date=" + removal_date + ", trn_infect_control_bundle_details="
+				+ trn_infect_control_bundle_details + ", trn_infect_control_daily_hdr=" + trn_infect_control_daily_hdr
+				+ "]";
 	}
 
 	

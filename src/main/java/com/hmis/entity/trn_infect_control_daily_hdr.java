@@ -27,6 +27,9 @@ public class trn_infect_control_daily_hdr {
 	@Column(name = "unit")
 	private String unit;
 
+	@Column(name = "bundle_type")
+	private String bundle_type;
+
 	@OneToMany(mappedBy = "trn_infect_control_daily_hdr")
 	private List<trn_infect_control_bundle_details_daily> trn_infect_control_bundle_daily_details;
 
@@ -80,6 +83,14 @@ public class trn_infect_control_daily_hdr {
 		this.unit = unit;
 	}
 
+	public String getBundle_type() {
+		return bundle_type;
+	}
+
+	public void setBundle_type(String bundle_type) {
+		this.bundle_type = bundle_type;
+	}
+
 	public List<trn_infect_control_bundle_details_daily> getTrn_infect_control_bundle_daily_details() {
 		return trn_infect_control_bundle_daily_details;
 	}
@@ -88,8 +99,6 @@ public class trn_infect_control_daily_hdr {
 			List<trn_infect_control_bundle_details_daily> trn_infect_control_bundle_daily_details) {
 		this.trn_infect_control_bundle_daily_details = trn_infect_control_bundle_daily_details;
 	}
-	
-	
 
 	public trn_infect_control_device_hdr getTrn_infect_control_device_hdr() {
 		return trn_infect_control_device_hdr;
@@ -102,10 +111,9 @@ public class trn_infect_control_daily_hdr {
 	@Override
 	public String toString() {
 		return "trn_infect_control_daily_hdr [id=" + id + ", bundle_date=" + bundle_date + ", temperature="
-				+ temperature + ", unit=" + unit + ", trn_infect_control_bundle_daily_details="
-				+ trn_infect_control_bundle_daily_details + "]";
+				+ temperature + ", unit=" + unit + ", bundle_type=" + bundle_type
+				+ ", trn_infect_control_bundle_daily_details=" + trn_infect_control_bundle_daily_details
+				+ ", trn_infect_control_device_hdr=" + trn_infect_control_device_hdr + "]";
 	}
-
-	
 
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.hmis.entity.MstActiveMedicalAudit;
 import com.hmis.request.nabh.savemedicalchecklist.SaveActiveMedicalRecordRequest;
 import com.hmis.response.FinalResponse;
+import com.hmis.response.check_preious_entry.CheckPreviousEntryResponse;
 import com.hmis.service.ic.ActiveMedicalRecordService;
 
 @RestController
@@ -33,6 +35,13 @@ public class ActiveMedicalRecordController {
 		FinalResponse response = activeMedicalRecordService.save_checklist(saveActiveMedicalRecordRequest);
 		return ResponseEntity.ok().body(response);
 	}
+	
+	@GetMapping("/check_preious_entry/{visit_id}")
+	public ResponseEntity<CheckPreviousEntryResponse> checkPreviousEntry(@PathVariable Integer visit_id){
+		CheckPreviousEntryResponse response = activeMedicalRecordService.checkPreviousEntry(visit_id);
+		return ResponseEntity.ok().body(response);
+	}
+	
 	
 	
 

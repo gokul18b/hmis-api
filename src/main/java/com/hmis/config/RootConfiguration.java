@@ -37,7 +37,8 @@ public class RootConfiguration {
 	@Bean
 	public LocalSessionFactoryBean getSessionFactory() {
 		LocalSessionFactoryBean factoryBean = new LocalSessionFactoryBean();
-
+		
+		
 		Properties props = new Properties();
 		// Setting JDBC properties
 		props.put(DRIVER, env.getProperty("postgresql.driver"));
@@ -56,6 +57,7 @@ public class RootConfiguration {
 		props.put(C3P0_TIMEOUT, env.getProperty("hibernate.c3p0.timeout"));
 		props.put(C3P0_MAX_STATEMENTS, env.getProperty("hibernate.c3p0.max_statements"));
 
+		
 		factoryBean.setHibernateProperties(props);
 		factoryBean.setPackagesToScan("com.hmis.entity");
 
@@ -68,5 +70,8 @@ public class RootConfiguration {
 		transactionManager.setSessionFactory(getSessionFactory().getObject());
 		return transactionManager;
 	}
+	
+	
+	
 
 }

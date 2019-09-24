@@ -68,6 +68,7 @@ public class InfectionControlController {
 	public ResponseEntity<InfectionControlSaveResponse> save_infection_control1(
 			@RequestBody trn_infect_control_device_hdr trn_infect_control_device_hdr) {
 		InfectionControlSaveResponse response = null;
+		System.out.println(trn_infect_control_device_hdr);
 		response = infectionControlService.saveInfectionControl(trn_infect_control_device_hdr);
 		return ResponseEntity.ok().body(response);
 	}
