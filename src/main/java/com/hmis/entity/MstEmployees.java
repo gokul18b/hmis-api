@@ -17,6 +17,9 @@ public class MstEmployees {
 
 	@Column(name = "mst_designation_id")
 	private Integer mst_designation_id;
+	
+	@Column(name="emp_fname")
+	private String emp_fname;
 
 	public int getId() {
 		return id;
@@ -42,4 +45,13 @@ public class MstEmployees {
 		this.mst_designation_id = mst_designation_id;
 	}
 
+	public String getEmpFname() {
+		return emp_fname;
+	}
+
+	public void setEmpFname(String empFname) {
+		this.emp_fname = empFname;
+	}
+
+	
 }

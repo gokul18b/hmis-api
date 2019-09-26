@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.hmis.entity.MstUsers;
 import com.hmis.response.LoginResponse;
-import com.hmis.service.ic.CommonService;
+import com.hmis.service.CommonService;
 
 @RestController
 @RequestMapping("/common")

@@ -1,4 +1,4 @@
-package com.hmis.service.ic;
+package com.hmis.service;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -8,16 +8,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.hmis.dao.ic.InfectionControlDAO;
+import com.hmis.dao.InfectionControlDAO;
+import com.hmis.entity.MstAntibiotics;
 import com.hmis.entity.MstInfectControlBundle;
 import com.hmis.entity.MstInfectControlDevices;
 import com.hmis.entity.MstUsers;
-import com.hmis.entity.trn_infect_control_device_hdr;
+import com.hmis.entity.TrnIcAntibiotics;
+import com.hmis.entity.TrnInfectControlDeviceHdr;
+
 import com.hmis.response.GetIcBundlesResponse;
 import com.hmis.response.GetIcDevicesResponse;
 import com.hmis.response.InfectControlDetailResponse;
 import com.hmis.response.InfectionControlSaveResponse;
 import com.hmis.response.LoginResponse;
+import com.hmis.response.SaveResponse;
 import com.hmis.response.getBundleReport.DailyBundleDetails;
 import com.hmis.response.getBundleReport.DailyBundleReport;
 import com.hmis.response.getBundleReport.GetBundleReport;
@@ -114,8 +118,7 @@ public class InfectionControlService {
 		return getIcBundlesResponse;
 	}
 
-	public InfectionControlSaveResponse saveInfectionControl(
-			trn_infect_control_device_hdr trn_infect_control_device_hdr) {
+	public InfectionControlSaveResponse saveInfectionControl(TrnInfectControlDeviceHdr trn_infect_control_device_hdr) {
 		InfectionControlSaveResponse response = new InfectionControlSaveResponse();
 		Integer Daoresponse = infectionControlDAO.saveInfectionControl(trn_infect_control_device_hdr);
 
@@ -129,8 +132,8 @@ public class InfectionControlService {
 		return response;
 	}
 
-	public InfectionControlSaveResponse updateInfectionControl(
-			trn_infect_control_device_hdr trn_infect_control_device_hdr, Integer hdr_id) {
+	public InfectionControlSaveResponse updateInfectionControl(TrnInfectControlDeviceHdr trn_infect_control_device_hdr,
+			Integer hdr_id) {
 
 		InfectionControlSaveResponse response = new InfectionControlSaveResponse();
 		Integer Daoresponse = infectionControlDAO.updateInfectionControl(trn_infect_control_device_hdr, hdr_id);
@@ -148,13 +151,13 @@ public class InfectionControlService {
 	public InfectControlDetailResponse get_infectDetails(Integer device_id, Integer visit_id) {
 		InfectControlDetailResponse response = new InfectControlDetailResponse();
 
-		List<trn_infect_control_device_hdr> getting_completed_list = infectionControlDAO.get_complete_ic(device_id,
+		List<TrnInfectControlDeviceHdr> getting_completed_list = infectionControlDAO.get_complete_ic(device_id,
 				visit_id);
-		trn_infect_control_device_hdr getting_incompleted = infectionControlDAO.get_incomplete_ic(device_id, visit_id);
+		TrnInfectControlDeviceHdr getting_incompleted = infectionControlDAO.get_incomplete_ic(device_id, visit_id);
 
 		if (getting_incompleted != null) {
-			trn_infect_control_device_hdr incomplete_response = new trn_infect_control_device_hdr();
-			incomplete_response = new trn_infect_control_device_hdr(getting_incompleted.getId(),
+			TrnInfectControlDeviceHdr incomplete_response = new TrnInfectControlDeviceHdr();
+			incomplete_response = new TrnInfectControlDeviceHdr(getting_incompleted.getId(),
 					getting_incompleted.getMst_infect_control_device_id(), getting_incompleted.getVisit_id(),
 //					getting_incompleted.getInfect_control_date(),
 					getting_incompleted.getInsertion_date(), getting_incompleted.getRemoval_date());
@@ -165,10 +168,10 @@ public class InfectionControlService {
 		}
 
 		if (getting_completed_list != null && getting_completed_list.size() != 0) {
-			List<trn_infect_control_device_hdr> complete_responseList = new ArrayList<>();
+			List<TrnInfectControlDeviceHdr> complete_responseList = new ArrayList<>();
 
-			for (trn_infect_control_device_hdr row : getting_completed_list) {
-				complete_responseList.add(new trn_infect_control_device_hdr(row.getId(),
+			for (TrnInfectControlDeviceHdr row : getting_completed_list) {
+				complete_responseList.add(new TrnInfectControlDeviceHdr(row.getId(),
 						row.getMst_infect_control_device_id(), row.getVisit_id(),
 //						row.getInfect_control_date(), 
 						row.getInsertion_date(), row.getRemoval_date()));
@@ -249,8 +252,7 @@ public class InfectionControlService {
 	public GetBundleReport get_bundle_report(String from_date, String to_date) {
 		GetBundleReport getBundleReport = new GetBundleReport();
 		List<Object[]> obj_insertion_bundle = infectionControlDAO.getInsertionBundleSummary(from_date, to_date);
-		
-		
+
 		ArrayList<Integer> floorIdList = new ArrayList<>();
 		ArrayList<String> floorNameList = new ArrayList<>();
 
@@ -263,49 +265,46 @@ public class InfectionControlService {
 				floorNameList.add(floor_name);
 			}
 
-			if(!floorIdList.contains(floor_id)) {
+			if (!floorIdList.contains(floor_id)) {
 				floorIdList.add(floor_id);
 				floorNameList.add(floor_name);
 			}
 		}
 
-		
 		List<InsertionBundleReport> insertionBundleReportList = new ArrayList<>();
-		
+
 		for (int i = 0; i < floorIdList.size(); i++) {
 			InsertionBundleReport insertionBundleReport = new InsertionBundleReport();
 			insertionBundleReport.setFloor_id(floorIdList.get(i));
 			insertionBundleReport.setFloor_name(floorNameList.get(i));
-			
+
 			List<InsertionBundleDetails> insertionBundleDetailsList = new ArrayList<>();
-			
+
 			for (Object[] row : obj_insertion_bundle) {
 				Integer floor_id = (Integer) row[0];
 				String floor_name = (String) row[1];
 				String device_name = (String) row[2];
 				BigInteger total_count = (BigInteger) row[3];
 				BigInteger issue_count = (BigInteger) row[4];
-				
-				
-				if(floorIdList.get(i)==floor_id) {
-					System.out.println("Floor_id"+floor_id+" -"+ (i)+" -- "+floorIdList.get(i));
+
+				if (floorIdList.get(i) == floor_id) {
+					System.out.println("Floor_id" + floor_id + " -" + (i) + " -- " + floorIdList.get(i));
 					InsertionBundleDetails insertionBundleDetails = new InsertionBundleDetails();
 					insertionBundleDetails.setDevice_name(device_name);
 					insertionBundleDetails.setTotal_count(total_count);
 					insertionBundleDetails.setIssue_count(issue_count);
 					insertionBundleDetailsList.add(insertionBundleDetails);
-					
+
 				}
-				
+
 			}
 			insertionBundleReport.setDetails(insertionBundleDetailsList);
-			
+
 			insertionBundleReportList.add(insertionBundleReport);
 		}
-		
+
 		getBundleReport.setInsertion_bundle(insertionBundleReportList);
-		
-		
+
 //		DAILY BUNDLE REPORT
 		List<Object[]> obj_daily_bundle = infectionControlDAO.getDailyBundleSummary(from_date, to_date);
 		ArrayList<Integer> floorIdList_daily = new ArrayList<>();
@@ -320,49 +319,64 @@ public class InfectionControlService {
 				floorNameList_daily.add(floor_name);
 			}
 
-			if(!floorIdList_daily.contains(floor_id)) {
+			if (!floorIdList_daily.contains(floor_id)) {
 				floorIdList_daily.add(floor_id);
 				floorNameList_daily.add(floor_name);
 			}
 		}
 
-		
 		List<DailyBundleReport> dailyBundleReportList = new ArrayList<>();
-		
+
 		for (int i = 0; i < floorIdList_daily.size(); i++) {
 			DailyBundleReport dailyBundleReport = new DailyBundleReport();
 			dailyBundleReport.setFloor_id(floorIdList_daily.get(i));
 			dailyBundleReport.setFloor_name(floorNameList_daily.get(i));
-			
+
 			List<DailyBundleDetails> dailyBundleDetailsList = new ArrayList<>();
-			
+
 			for (Object[] row : obj_daily_bundle) {
 				Integer floor_id = (Integer) row[0];
 				String floor_name = (String) row[1];
 				String device_name = (String) row[2];
 				BigInteger total_count = (BigInteger) row[3];
 				BigInteger issue_count = (BigInteger) row[4];
-				
-				
-				if(floorIdList_daily.get(i)==floor_id) {
-					System.out.println("Floor_id"+floor_id+" -"+ (i)+" -- "+floorIdList_daily.get(i));
+
+				if (floorIdList_daily.get(i) == floor_id) {
+					System.out.println("Floor_id" + floor_id + " -" + (i) + " -- " + floorIdList_daily.get(i));
 					DailyBundleDetails dailyBundleDetails = new DailyBundleDetails();
 					dailyBundleDetails.setDevice_name(device_name);
 					dailyBundleDetails.setTotal_count(total_count);
 					dailyBundleDetails.setIssue_count(issue_count);
 					dailyBundleDetailsList.add(dailyBundleDetails);
-					
+
 				}
-				
+
 			}
 			dailyBundleReport.setDetails(dailyBundleDetailsList);
-			
+
 			dailyBundleReportList.add(dailyBundleReport);
 		}
-		
+
 		getBundleReport.setDaily_bundle(dailyBundleReportList);
-		
 
 		return getBundleReport;
+	}
+
+	public List<MstAntibiotics> get_antibiotics() {
+		return infectionControlDAO.get_antibiotics();
+	}
+
+	public SaveResponse saveOrUpdateAntibiotics(TrnIcAntibiotics trnIcAntibiotics) {
+		SaveResponse response = new SaveResponse();
+		Object obj = infectionControlDAO.saveOrUpdateAntibiotics(trnIcAntibiotics);
+		if (obj == null) {
+			response.setStatus(0);
+			response.setMessage("Something went wrong");
+		} else {
+			response.setStatus(1);
+			response.setMessage("Succesfully Saved...");
+		}
+		System.out.println(response);
+		return response;
 	}
 }

@@ -1,4 +1,4 @@
-package com.hmis.dao.ic;
+package com.hmis.dao;
 
 import java.util.List;
 
@@ -27,7 +27,7 @@ public class CommonDao {
 			String hql = "select mst_usrs.userref_id,mst_usrs.displayname,mob_role.role_name from  mst_users mst_usrs\r\n"
 					+ "left join mst_employees mst_emp on(mst_emp.id=mst_usrs.userref_id)\r\n"
 					+ "right join mst_mobileapp_user_role mob_role on(mob_role.mst_employee_id=mst_emp.id)\r\n"
-					+ "where mst_usrs.username= ? and mst_usrs.password= ?";
+					+ "where upper(mst_usrs.username)=upper( ? ) and mst_usrs.password= ?";
 			Query query = session.createQuery(hql);
 			query.setParameter(0, mstUsers.getUsername());
 			query.setParameter(1, md5.encodePassword(mstUsers.getPassword(), null));

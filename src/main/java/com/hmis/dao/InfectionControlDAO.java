@@ -1,17 +1,25 @@
-package com.hmis.dao.ic;
+package com.hmis.dao;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Tuple;
+import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.ParameterExpression;
+import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
@@ -20,12 +28,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.providers.encoding.Md5PasswordEncoder;
 import org.springframework.stereotype.Repository;
 
+import com.hmis.entity.MstAntibiotics;
 import com.hmis.entity.MstInfectControlDevices;
 import com.hmis.entity.MstUsers;
+import com.hmis.entity.TrnIcAntibiotics;
+import com.hmis.entity.TrnInfectControlDeviceHdr;
 import com.hmis.entity.trn_infect_control_bundle_details;
 import com.hmis.entity.trn_infect_control_bundle_details_daily;
 import com.hmis.entity.trn_infect_control_daily_hdr;
-import com.hmis.entity.trn_infect_control_device_hdr;
 import com.hmis.response.get_ic_summary.InfectionDeviceSummary;
 import com.hmis.response.ic_patient_report.DailyBundle;
 import com.hmis.response.ic_patient_report.DailyBundleDetails;
@@ -111,11 +121,11 @@ public class InfectionControlDAO {
 	}
 
 	@Transactional
-	public Integer saveInfectionControl(trn_infect_control_device_hdr trn_infect_control_device_hdr) {
+	public Integer saveInfectionControl(TrnInfectControlDeviceHdr trn_infect_control_device_hdr) {
 		Session session = sessionFactory.getCurrentSession();
 		System.out.println(trn_infect_control_device_hdr);
 		try {
-			Criteria criteria = session.createCriteria(trn_infect_control_device_hdr.class);
+			Criteria criteria = session.createCriteria(TrnInfectControlDeviceHdr.class);
 
 			session.save(trn_infect_control_device_hdr);
 
@@ -142,12 +152,12 @@ public class InfectionControlDAO {
 	}
 
 	@Transactional
-	public Integer updateInfectionControl(trn_infect_control_device_hdr trn_infect_control_device_hdr, Integer hdr_id) {
+	public Integer updateInfectionControl(TrnInfectControlDeviceHdr trn_infect_control_device_hdr, Integer hdr_id) {
 		// System.out.println(trn_infect_control_device_hdr);
 		Session session = sessionFactory.getCurrentSession();
 		try {
-			trn_infect_control_device_hdr new_trn_infect_control_device_hdr = session
-					.get(trn_infect_control_device_hdr.class, hdr_id);
+			TrnInfectControlDeviceHdr new_trn_infect_control_device_hdr = session.get(TrnInfectControlDeviceHdr.class,
+					hdr_id);
 //			new_trn_infect_control_device_hdr
 //					.setInfect_control_date(trn_infect_control_device_hdr.getInfect_control_date());
 			new_trn_infect_control_device_hdr.setInsertion_date(trn_infect_control_device_hdr.getInsertion_date());
@@ -183,15 +193,15 @@ public class InfectionControlDAO {
 
 	}
 
-	public List<trn_infect_control_device_hdr> get_complete_ic(Integer device_id, Integer visit_id) {
+	public List<TrnInfectControlDeviceHdr> get_complete_ic(Integer device_id, Integer visit_id) {
 		Session session = sessionFactory.getCurrentSession();
 		try {
-			Criteria criteria = session.createCriteria(trn_infect_control_device_hdr.class)
+			Criteria criteria = session.createCriteria(TrnInfectControlDeviceHdr.class)
 					.add(Restrictions.eq("visit_id", visit_id))
 					.add(Restrictions.eq("mst_infect_control_device_id", device_id))
 					.add(Restrictions.isNotNull("removal_date"));
 			Object object = criteria.list();
-			List<trn_infect_control_device_hdr> header = (List<trn_infect_control_device_hdr>) object;
+			List<TrnInfectControlDeviceHdr> header = (List<TrnInfectControlDeviceHdr>) object;
 			return header;
 		} catch (HibernateException e) {
 			return null;
@@ -199,16 +209,16 @@ public class InfectionControlDAO {
 
 	}
 
-	public trn_infect_control_device_hdr get_incomplete_ic(Integer device_id, Integer visit_id) {
+	public TrnInfectControlDeviceHdr get_incomplete_ic(Integer device_id, Integer visit_id) {
 		System.out.println("incomplete");
 		Session session = sessionFactory.getCurrentSession();
 		try {
-			Criteria criteria = session.createCriteria(trn_infect_control_device_hdr.class)
+			Criteria criteria = session.createCriteria(TrnInfectControlDeviceHdr.class)
 					.add(Restrictions.eq("visit_id", visit_id))
 					.add(Restrictions.eq("mst_infect_control_device_id", device_id))
 					.add(Restrictions.isNull("removal_date"));
 			Object object = criteria.uniqueResult();
-			trn_infect_control_device_hdr incomplete_details = (trn_infect_control_device_hdr) object;
+			TrnInfectControlDeviceHdr incomplete_details = (TrnInfectControlDeviceHdr) object;
 //			System.out.println("incomplete_details-->"+incomplete_details);
 			return incomplete_details;
 		} catch (HibernateException e) {
@@ -398,6 +408,33 @@ public class InfectionControlDAO {
 		Query query = session.createSQLQuery(hql);
 		List<Object[]> list = query.list();
 		return list;
+	}
+
+	public List<MstAntibiotics> get_antibiotics() {
+		Session session = sessionFactory.getCurrentSession();
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<MstAntibiotics> cq = builder.createQuery(MstAntibiotics.class);
+		Root<MstAntibiotics> author = cq.from(MstAntibiotics.class);
+		cq.where(builder.equal(author.get("status"), 1));
+		List<MstAntibiotics> allItems = session.createQuery(cq).getResultList();
+		return allItems;
+	}
+
+	public Object saveOrUpdateAntibiotics(TrnIcAntibiotics trnIcAntibiotics) {
+		try {
+			Session session = sessionFactory.getCurrentSession();
+			TrnIcAntibiotics newTrnIcAntibiotics = new TrnIcAntibiotics();
+			newTrnIcAntibiotics.setId(trnIcAntibiotics.getId());
+			newTrnIcAntibiotics.setStart_time(trnIcAntibiotics.getStart_time());
+			newTrnIcAntibiotics.setEnd_time(trnIcAntibiotics.getEnd_time());
+			newTrnIcAntibiotics.setMst_antibiotic_id(trnIcAntibiotics.getMst_antibiotic_id());
+			newTrnIcAntibiotics.setHighend_antibiotic_id(trnIcAntibiotics.getHighend_antibiotic_id());
+			session.saveOrUpdate(newTrnIcAntibiotics);
+			return 1;
+		} catch (Exception e) {
+			return null;
+		}
+
 	}
 
 }

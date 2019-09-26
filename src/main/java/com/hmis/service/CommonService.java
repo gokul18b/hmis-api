@@ -1,4 +1,4 @@
-package com.hmis.service.ic;
+package com.hmis.service;
 
 import java.util.List;
 
@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.hmis.dao.ic.CommonDao;
-import com.hmis.dao.ic.InfectionControlDAO;
+import com.hmis.dao.CommonDao;
+import com.hmis.dao.InfectionControlDAO;
 import com.hmis.entity.MstUsers;
 import com.hmis.response.LoginResponse;
 

@@ -1,4 +1,4 @@
-package com.hmis.dao.ic;
+package com.hmis.dao;
 
 import java.util.List;
 
@@ -30,8 +30,6 @@ public class ActiveMedicalRecordDao {
 
 	@Autowired
 	SessionFactory sessionFactory;
-	
-
 
 	public List<MstActiveMedicalAudit> get_questions() {
 		Session session = sessionFactory.getCurrentSession();
@@ -115,5 +113,15 @@ public class ActiveMedicalRecordDao {
 //		System.out.println(list.get(0)[0]+"--"+list.get(0)[1]);
 //		return list;
 //	}
-	
+
+	public List<Object[]> get_audit_summary(String from_date, String to_date) {
+		Session session = sessionFactory.getCurrentSession();
+		String hql = "select emp.emp_fname,count(emp.id) from trn_active_medical_audit as trn_audit \r\n" + 
+				"LEFT JOIN mst_employees as emp ON(emp.id=trn_audit.created_by) \r\n" + 
+				"WHERE trn_audit.created_date between '"+from_date+" 00:00:00' and '"+to_date+" 23:59:59'\r\n" + 
+				"GROUP BY emp.id,emp.emp_fname";
+		Query<Object[]> query = session.createQuery(hql);
+		return query.getResultList();
+	}
+
 }

@@ -20,7 +20,7 @@ import javax.persistence.TemporalType;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity(name = "trn_infect_control_device_hdr")
-public class trn_infect_control_device_hdr {
+public class TrnInfectControlDeviceHdr {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
@@ -54,12 +54,12 @@ public class trn_infect_control_device_hdr {
 	@OneToMany(mappedBy = "trn_infect_control_device_hdr", fetch = FetchType.LAZY)
 	private List<trn_infect_control_daily_hdr> trn_infect_control_daily_hdr;
 
-	public trn_infect_control_device_hdr() {
+	public TrnInfectControlDeviceHdr() {
 		super();
 
 	}
 
-	public trn_infect_control_device_hdr(Integer id, Integer mst_infect_control_device_id, Integer visit_id,
+	public TrnInfectControlDeviceHdr(Integer id, Integer mst_infect_control_device_id, Integer visit_id,
 //			Date infect_control_date, 
 			Date insertion_date, Date removal_date) {
 		super();

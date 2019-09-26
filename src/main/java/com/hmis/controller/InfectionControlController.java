@@ -7,24 +7,24 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hmis.entity.MstAntibiotics;
 import com.hmis.entity.MstUsers;
-import com.hmis.entity.trn_infect_control_device_hdr;
+import com.hmis.entity.TrnIcAntibiotics;
+import com.hmis.entity.TrnInfectControlDeviceHdr;
 import com.hmis.response.GetIcBundlesResponse;
 import com.hmis.response.GetIcDevicesResponse;
 import com.hmis.response.InfectControlDetailResponse;
-import com.hmis.response.InfectDetails;
 import com.hmis.response.InfectionControlSaveResponse;
-
 import com.hmis.response.LoginResponse;
+import com.hmis.response.SaveResponse;
 import com.hmis.response.getBundleReport.GetBundleReport;
 import com.hmis.response.get_ic_summary.InfectionDeviceSummary;
 import com.hmis.response.ic_patient_report.IcPatientReport;
-import com.hmis.service.ic.InfectionControlService;
+import com.hmis.service.InfectionControlService;
 
 @RestController
 @RequestMapping("/infection")
@@ -56,7 +56,7 @@ public class InfectionControlController {
 
 	@PostMapping("/save_infection_control/{hdr_id}")
 	public ResponseEntity<InfectionControlSaveResponse> save_infection_control(
-			@RequestBody trn_infect_control_device_hdr trn_infect_control_device_hdr, @PathVariable Integer hdr_id) {
+			@RequestBody TrnInfectControlDeviceHdr trn_infect_control_device_hdr, @PathVariable Integer hdr_id) {
 		InfectionControlSaveResponse response = null;
 		System.out.println(trn_infect_control_device_hdr);
 		response = infectionControlService.updateInfectionControl(trn_infect_control_device_hdr, hdr_id);
@@ -66,7 +66,7 @@ public class InfectionControlController {
 
 	@PostMapping("/save_infection_control")
 	public ResponseEntity<InfectionControlSaveResponse> save_infection_control1(
-			@RequestBody trn_infect_control_device_hdr trn_infect_control_device_hdr) {
+			@RequestBody TrnInfectControlDeviceHdr trn_infect_control_device_hdr) {
 		InfectionControlSaveResponse response = null;
 		System.out.println(trn_infect_control_device_hdr);
 		response = infectionControlService.saveInfectionControl(trn_infect_control_device_hdr);
@@ -95,6 +95,19 @@ public class InfectionControlController {
 	@GetMapping("/get_bundle_report/{from_date}/{to_date}")
 	public ResponseEntity<GetBundleReport> get_bundle_report(@PathVariable String from_date , @PathVariable String to_date){
 		return ResponseEntity.ok().body(infectionControlService.get_bundle_report(from_date,to_date));
+	}
+	
+	@GetMapping("/get_antibiotics")
+	public ResponseEntity<List<MstAntibiotics>> get_antibiotics(){
+		List<MstAntibiotics> response = infectionControlService.get_antibiotics();
+		return ResponseEntity.ok().body(response);
+	}
+	
+	@PostMapping("/saveOrUpdate_antibiotics")
+	public ResponseEntity<SaveResponse> saveOrUpdateAntibiotics(@RequestBody TrnIcAntibiotics trnIcAntibiotics){
+		SaveResponse response = new SaveResponse();
+		response = infectionControlService.saveOrUpdateAntibiotics(trnIcAntibiotics);
+		return ResponseEntity.ok().body(response);
 	}
 	
 }

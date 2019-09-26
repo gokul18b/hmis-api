@@ -16,7 +16,7 @@ public class trn_infect_control_bundle_details {
 
 	@ManyToOne
 	@JoinColumn(name = "trn_infect_control_device_hdr_id")
-	private trn_infect_control_device_hdr trn_infect_control_device_hdr;
+	private TrnInfectControlDeviceHdr trn_infect_control_device_hdr;
 
 	@Column(name = "mst_infect_control_bundle_id")
 	private Integer mst_infect_control_bundle_id;
@@ -48,11 +48,11 @@ public class trn_infect_control_bundle_details {
 		this.id = id;
 	}
 
-	public trn_infect_control_device_hdr getTrn_infect_control_device_hdr() {
+	public TrnInfectControlDeviceHdr getTrn_infect_control_device_hdr() {
 		return trn_infect_control_device_hdr;
 	}
 
-	public void setTrn_infect_control_device_hdr(trn_infect_control_device_hdr trn_infect_control_device_hdr) {
+	public void setTrn_infect_control_device_hdr(TrnInfectControlDeviceHdr trn_infect_control_device_hdr) {
 		this.trn_infect_control_device_hdr = trn_infect_control_device_hdr;
 	}
 

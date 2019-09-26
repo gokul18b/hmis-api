@@ -1,5 +1,6 @@
-package com.hmis.service.ic;
+package com.hmis.service;
 
+import java.math.BigInteger;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -10,13 +11,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.hmis.dao.ic.ActiveMedicalRecordDao;
+import com.hmis.dao.ActiveMedicalRecordDao;
 import com.hmis.entity.MstActiveMedicalAudit;
+import com.hmis.entity.MstAntibiotics;
 import com.hmis.entity.TrnActiveMedicalAudit;
 import com.hmis.request.nabh.savemedicalchecklist.SaveActiveMedicalRecordRequest;
 import com.hmis.response.FinalResponse;
 import com.hmis.response.check_preious_entry.CheckPreviousEntryResponse;
 import com.hmis.response.check_preious_entry.TimeDetails;
+import com.hmis.response.get_audit_summary.GetAuditSummary;
 
 @Service
 @Transactional
@@ -52,28 +55,26 @@ public class ActiveMedicalRecordService {
 			response.setMessage("No Data found");
 		} else {
 			response.setStatus(0);
-			
-			String message = "Active Medical Record Audit Checklist already taken on ";
-			
-			for(TrnActiveMedicalAudit obj :listObj) {
-				 
-			            Date initDate = null;
-			            try {
-			                initDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(String.valueOf(obj.getCreated_date()));
 
-			                SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy hh:mm a");
-			                String date = formatter.format(initDate);
-			                
-			                message = message +"\n"+date;
-			            } catch (ParseException e) {
-			                e.printStackTrace();
-			            }
-			        
-				
-				
+			String message = "Active Medical Record Audit Checklist already taken on ";
+
+			for (TrnActiveMedicalAudit obj : listObj) {
+
+				Date initDate = null;
+				try {
+					initDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(String.valueOf(obj.getCreated_date()));
+
+					SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy hh:mm a");
+					String date = formatter.format(initDate);
+
+					message = message + "\n" + date;
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+
 			}
 			response.setMessage(message);
-			
+
 			List<Object[]> responseList = (List<Object[]>) activeMedicalRecordDao.getPreviousTime(visit_id);
 			List<TimeDetails> timeDetailsList = new ArrayList<TimeDetails>();
 
@@ -95,7 +96,27 @@ public class ActiveMedicalRecordService {
 	}
 
 	public void getActiveMedicalSummary() {
-		//activeMedicalRecordDao.getActiveMedicalSummary();
-		
+		// activeMedicalRecordDao.getActiveMedicalSummary();
+
 	}
+
+	public List<GetAuditSummary> get_audit_summary(String from_date, String to_date) {
+		List<GetAuditSummary> auditSummaries = new ArrayList<>();
+
+		List<Object[]> result = activeMedicalRecordDao.get_audit_summary(from_date,to_date);
+		for (Object[] row : result) {
+			GetAuditSummary getAuditSummary = new GetAuditSummary();
+			String emp_name = (String) row[0];
+			Long count = (Long) row[1];
+
+			getAuditSummary.setCount(count);
+			getAuditSummary.setEmp_name(emp_name);
+
+			auditSummaries.add(getAuditSummary);
+		}
+
+		return auditSummaries;
+
+	}
+
 }
