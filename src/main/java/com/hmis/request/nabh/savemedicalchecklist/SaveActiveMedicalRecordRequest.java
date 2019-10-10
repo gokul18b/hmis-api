@@ -7,6 +7,8 @@ public class SaveActiveMedicalRecordRequest {
 	private Integer created_by;
 	private Integer bed_id;
 	private List<Details> details;
+	
+	
 
 	public Integer getVisit_id() {
 		return visit_id;

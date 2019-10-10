@@ -11,16 +11,10 @@ public class MstAntibiotics {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-
-		
 	@Column(name = "antibiotics_name")
 	private String antibiotics_name;
-
 	@Column(name = "status")
 	private Integer status;
-	
-	
-
 
 	public MstAntibiotics(int id, String antibiotics_name, Integer status) {
 		super();

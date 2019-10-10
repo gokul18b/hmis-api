@@ -1,5 +1,11 @@
 package com.hmis.dao;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -18,6 +24,7 @@ import org.hibernate.criterion.Restrictions;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.hmis.entity.MstActiveMedicalAudit;
 import com.hmis.entity.TrnActiveMedicalAudit;
@@ -43,7 +50,8 @@ public class ActiveMedicalRecordDao {
 		// return checkList;
 	}
 
-	public Integer save_checklist(SaveActiveMedicalRecordRequest saveActiveMedicalRecordRequest) {
+	public Integer save_checklist(SaveActiveMedicalRecordRequest saveActiveMedicalRecordRequest, List<MultipartFile> files) {
+		
 		Session session = sessionFactory.getCurrentSession();
 		try {
 
@@ -62,6 +70,38 @@ public class ActiveMedicalRecordDao {
 				trnActiveMedicalAuditDetails.setTotal_minutes(details.getTotal_minutes());
 				session.save(trnActiveMedicalAuditDetails);
 			}
+			
+				
+			String rootPath = System.getProperty("catalina.home")+File.separator +"webapps"+File.separator+"audit_images"+File.separator+String.valueOf(trnActiveMedicalAudit.getId())+File.separator;
+
+			System.out.println(rootPath);
+			
+			
+			if (files.size() > 0) {
+				File directory = new File(rootPath);
+				if(!directory.exists()) {
+					 directory.mkdir();
+				}
+
+				
+				ArrayList<String> imArrayList = new ArrayList<>();
+				for (int i=0;i<files.size();i++) {
+					MultipartFile file = files.get(i);
+					try {
+						byte[] bytes = file.getBytes();
+						String img_name = trnActiveMedicalAudit.getId()+"_"+i;
+						Path path = Paths.get(rootPath +img_name+".jpg");
+						Files.write(path, bytes);
+						imArrayList.add(img_name);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+				trnActiveMedicalAudit.setImage_id(String.valueOf(imArrayList));
+				session.saveOrUpdate(trnActiveMedicalAudit);
+			}
+			
+			
 			return 1;
 		} catch (HibernateException e) {
 			return 0;

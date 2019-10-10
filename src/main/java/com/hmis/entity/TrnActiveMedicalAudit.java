@@ -28,6 +28,8 @@ public class TrnActiveMedicalAudit {
 	private Integer created_by;
 	@Column(name = "bed_id")
 	private Integer bed_id;
+	@Column(name = "image_id")
+	private String image_id;
 	
 	@Column(name="created_date")
 	@CreationTimestamp
@@ -82,6 +84,14 @@ public class TrnActiveMedicalAudit {
 
 	public void setCreated_date(Date created_date) {
 		this.created_date = created_date;
+	}
+
+	public String getImage_id() {
+		return image_id;
+	}
+
+	public void setImage_id(String image_id) {
+		this.image_id = image_id;
 	}
 	
 	

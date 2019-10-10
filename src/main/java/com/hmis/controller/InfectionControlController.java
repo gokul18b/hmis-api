@@ -97,17 +97,6 @@ public class InfectionControlController {
 		return ResponseEntity.ok().body(infectionControlService.get_bundle_report(from_date,to_date));
 	}
 	
-	@GetMapping("/get_antibiotics")
-	public ResponseEntity<List<MstAntibiotics>> get_antibiotics(){
-		List<MstAntibiotics> response = infectionControlService.get_antibiotics();
-		return ResponseEntity.ok().body(response);
-	}
 	
-	@PostMapping("/saveOrUpdate_antibiotics")
-	public ResponseEntity<SaveResponse> saveOrUpdateAntibiotics(@RequestBody TrnIcAntibiotics trnIcAntibiotics){
-		SaveResponse response = new SaveResponse();
-		response = infectionControlService.saveOrUpdateAntibiotics(trnIcAntibiotics);
-		return ResponseEntity.ok().body(response);
-	}
 	
 }

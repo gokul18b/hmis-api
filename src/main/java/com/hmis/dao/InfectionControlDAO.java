@@ -410,31 +410,7 @@ public class InfectionControlDAO {
 		return list;
 	}
 
-	public List<MstAntibiotics> get_antibiotics() {
-		Session session = sessionFactory.getCurrentSession();
-		CriteriaBuilder builder = session.getCriteriaBuilder();
-		CriteriaQuery<MstAntibiotics> cq = builder.createQuery(MstAntibiotics.class);
-		Root<MstAntibiotics> author = cq.from(MstAntibiotics.class);
-		cq.where(builder.equal(author.get("status"), 1));
-		List<MstAntibiotics> allItems = session.createQuery(cq).getResultList();
-		return allItems;
-	}
-
-	public Object saveOrUpdateAntibiotics(TrnIcAntibiotics trnIcAntibiotics) {
-		try {
-			Session session = sessionFactory.getCurrentSession();
-			TrnIcAntibiotics newTrnIcAntibiotics = new TrnIcAntibiotics();
-			newTrnIcAntibiotics.setId(trnIcAntibiotics.getId());
-			newTrnIcAntibiotics.setStart_time(trnIcAntibiotics.getStart_time());
-			newTrnIcAntibiotics.setEnd_time(trnIcAntibiotics.getEnd_time());
-			newTrnIcAntibiotics.setMst_antibiotic_id(trnIcAntibiotics.getMst_antibiotic_id());
-			newTrnIcAntibiotics.setHighend_antibiotic_id(trnIcAntibiotics.getHighend_antibiotic_id());
-			session.saveOrUpdate(newTrnIcAntibiotics);
-			return 1;
-		} catch (Exception e) {
-			return null;
-		}
-
-	}
+	
+	
 
 }

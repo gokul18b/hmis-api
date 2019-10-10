@@ -362,21 +362,7 @@ public class InfectionControlService {
 		return getBundleReport;
 	}
 
-	public List<MstAntibiotics> get_antibiotics() {
-		return infectionControlDAO.get_antibiotics();
-	}
+	
 
-	public SaveResponse saveOrUpdateAntibiotics(TrnIcAntibiotics trnIcAntibiotics) {
-		SaveResponse response = new SaveResponse();
-		Object obj = infectionControlDAO.saveOrUpdateAntibiotics(trnIcAntibiotics);
-		if (obj == null) {
-			response.setStatus(0);
-			response.setMessage("Something went wrong");
-		} else {
-			response.setStatus(1);
-			response.setMessage("Succesfully Saved...");
-		}
-		System.out.println(response);
-		return response;
-	}
+	
 }

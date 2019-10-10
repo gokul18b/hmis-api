@@ -10,6 +10,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.hmis.dao.ActiveMedicalRecordDao;
 import com.hmis.entity.MstActiveMedicalAudit;
@@ -33,10 +34,10 @@ public class ActiveMedicalRecordService {
 		return checkLists;
 	}
 
-	public FinalResponse save_checklist(SaveActiveMedicalRecordRequest saveActiveMedicalRecordRequest) {
+	public FinalResponse save_checklist(SaveActiveMedicalRecordRequest saveActiveMedicalRecordRequest, List<MultipartFile> files) {
 		// TODO Auto-generated method stub
 		FinalResponse response = new FinalResponse();
-		Integer status = activeMedicalRecordDao.save_checklist(saveActiveMedicalRecordRequest);
+		Integer status = activeMedicalRecordDao.save_checklist(saveActiveMedicalRecordRequest,files);
 		response.setStatus(status);
 		if (status == 1) {
 			response.setMessage("Succesfully Saved...");
